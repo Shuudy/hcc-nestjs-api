@@ -27,6 +27,9 @@ export class MemberEntity {
 
     @Column()
     role: string;
+    
+    @Column()
+    registration_date: Date;
 
     @OneToMany(() => NewsEntity, (NewsEntity) => NewsEntity.member)
     news: NewsEntity[];

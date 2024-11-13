@@ -13,8 +13,8 @@ export class NewsEntity {
     @Column('text')
     content: string;
 
-    @Column({ type: 'date' })
-    created_at: string;
+    @Column()
+    created_at: Date;
 
     @ManyToOne(() => MemberEntity, (member) => member.news)
     @JoinColumn({ name: 'member_id' })
