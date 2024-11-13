@@ -1,5 +1,6 @@
+import { MatchEntity } from '../match/match.entity';
 import { NewsEntity } from '../news/news.entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 export enum MemberRole {
     COACH = 'coach',
@@ -31,6 +32,9 @@ export class MemberEntity {
     @Column()
     registration_date: Date;
 
-    @OneToMany(() => NewsEntity, (NewsEntity) => NewsEntity.member)
+    @OneToMany(() => NewsEntity, (news) => news.member)
     news: NewsEntity[];
+
+    @ManyToMany(() => MatchEntity, (match) => match.members)
+    matches: MatchEntity[];
 }

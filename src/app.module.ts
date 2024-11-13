@@ -6,15 +6,17 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { MemberEntity } from './member/member.entity';
 import { NewsModule } from './news/news.module';
 import { NewsEntity } from './news/news.entity';
+import { MatchModule } from './match/match.module';
+import { MatchEntity } from './match/match.entity';
 
 @Module({
   imports: [MemberModule, 
     TypeOrmModule.forRoot({
       type: "sqlite",
       database: "database.sqlite",
-      entities: [MemberEntity, NewsEntity],
+      entities: [MemberEntity, NewsEntity, MatchEntity],
       synchronize: true
-    }), NewsModule
+    }), NewsModule, MatchModule
   ],
   controllers: [AppController],
   providers: [AppService],
