@@ -8,6 +8,7 @@ import { NewsModule } from './news/news.module';
 import { NewsEntity } from './news/news.entity';
 import { MatchModule } from './match/match.module';
 import { MatchEntity } from './match/match.entity';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [MemberModule, 
@@ -16,7 +17,7 @@ import { MatchEntity } from './match/match.entity';
       database: "database.sqlite",
       entities: [MemberEntity, NewsEntity, MatchEntity],
       synchronize: true
-    }), NewsModule, MatchModule
+    }), NewsModule, MatchModule, AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],
