@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { NewsEntity } from '../news/news.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 export enum MemberRole {
     COACH = 'coach',
@@ -26,4 +27,7 @@ export class MemberEntity {
 
     @Column()
     role: string;
+
+    @OneToMany(() => NewsEntity, (NewsEntity) => NewsEntity.member)
+    news: NewsEntity[];
 }
