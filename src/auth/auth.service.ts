@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MemberEntity } from '../member/member.entity';
@@ -22,7 +22,11 @@ export class AuthService {
         const member = await this.memberRepository.findOne({ where: { email: email } });
 
         if (!member) {
-            throw new NotFoundException("Adhérent non trouvé.");
+            throw new NotFoundException('Adhérent non trouvé.');
+        }
+
+        if (member.password != password) {
+            throw new UnauthorizedException('Mot de passe invalide.');
         }
 
         const payload = {
