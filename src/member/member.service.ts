@@ -7,7 +7,8 @@ import { Repository } from 'typeorm';
 export class MemberService {
     constructor(
         @InjectRepository(MemberEntity)
-        private memberEntity: Repository<MemberEntity>
+        private memberRepository: Repository<MemberEntity>
     ) {}
+    
     
 }

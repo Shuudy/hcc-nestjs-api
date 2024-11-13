@@ -7,7 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 export class MatchService {
     constructor(
         @InjectRepository(MatchEntity)
-        private matchEntity: Repository<MatchEntity>
+        private matchRepository: Repository<MatchEntity>
     ) {}
 
 }
