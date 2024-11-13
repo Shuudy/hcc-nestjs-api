@@ -29,7 +29,7 @@ export class MemberEntity {
     @Column()
     role: string;
     
-    @Column()
+    @Column({ default: () => 'datetime()' })
     registration_date: Date;
 
     @OneToMany(() => NewsEntity, (news) => news.member)
