@@ -1,7 +1,7 @@
 import { MemberEntity } from "../member/member.entity";
 import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity('matchs')
+@Entity('matches')
 export class MatchEntity {
 
     @PrimaryGeneratedColumn()
