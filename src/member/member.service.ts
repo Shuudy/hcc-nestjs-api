@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MemberEntity } from './member.entity';
 import { Repository } from 'typeorm';
@@ -10,6 +10,47 @@ export class MemberService {
         @InjectRepository(MemberEntity)
         private memberRepository: Repository<MemberEntity>
     ) {}
+
+    async getMembers(): Promise<MemberEntity[]> {
+        return await this.memberRepository
+        .createQueryBuilder('member')
+        .leftJoinAndSelect('member.matches', 'match')
+        .select([
+            'member.id',
+            'member.firstname', 
+            'member.lastname', 
+            'member.email', 
+            'member.registration_date', 
+            'member.role',
+            'match.id', 
+            'match.match_date'
+        ])
+        .getMany();
+    }
+
+    async getMember(id: number): Promise<MemberEntity> {
+        const member = await this.memberRepository
+        .createQueryBuilder('member')
+        .leftJoinAndSelect('member.matches', 'match')
+        .select([
+            'member.id',
+            'member.firstname', 
+            'member.lastname', 
+            'member.email', 
+            'member.registration_date', 
+            'member.role',
+            'match.id', 
+            'match.match_date'
+        ])
+        .where('member.id = :id', { id })
+        .getOne();
+
+        if (!member) {
+            throw new NotFoundException(`Membre avec l'ID ${id} non trouvé`);
+        }
+
+        return member;
+    }
     
     async addMember(memberDto: MemberDto): Promise<MemberEntity> {
 
