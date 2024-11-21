@@ -1,8 +1,7 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, ParseIntPipe } from '@nestjs/common';
 import { MemberService } from './member.service';
 import { MemberDto } from './member.dto';
 import { MemberEntity } from './member.entity';
-import { ParseIntPipe } from '@nestjs/common/pipes/parse-int.pipe';
 
 @Controller('members')
 export class MemberController {
