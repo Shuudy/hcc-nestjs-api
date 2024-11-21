@@ -10,6 +10,12 @@ export class MatchEntity {
     @Column()
     match_date: Date;
 
+    @Column({ nullable: true })
+    team1_score: number;
+
+    @Column({ nullable: true })
+    team2_score: number;
+
     @ManyToMany(() => MemberEntity, (member) => member.matches)
     @JoinTable({
         name: 'member_match',
