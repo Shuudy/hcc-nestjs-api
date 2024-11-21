@@ -10,6 +10,10 @@ export class AuthController {
     @Post('login')
     async signIn(@Body() authDto: AuthDto) {
         const token = await this.authService.signIn(authDto.email, authDto.password);
-        return { access_token: token };
+        return {
+            status: 'success',
+            message: 'Connexion réussie',
+            access_token: token
+        };
     }
 }
