@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { MemberEntity } from './member.entity';
 import { Repository } from 'typeorm';
 import { MemberDto } from './member.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class MemberService {
@@ -63,7 +64,9 @@ export class MemberService {
             throw new BadRequestException("Adresse e-mail déjà utilisée");
         }
 
-        const newMemberEntity = this.memberRepository.create({ role: 'contributor', ...memberDto});
+        const hashedPasword = await bcrypt.hash(memberDto.password, 11);
+
+        const newMemberEntity = this.memberRepository.create({ ...memberDto, password: hashedPasword, role: 'contributor' });
         return await this.memberRepository.save(newMemberEntity);
     }
 }

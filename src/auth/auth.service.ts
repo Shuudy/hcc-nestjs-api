@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MemberEntity } from '../member/member.entity';
 import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -25,7 +26,8 @@ export class AuthService {
             throw new NotFoundException('Adhérent non trouvé.');
         }
 
-        if (member.password != password) {
+        const isPasswordValid = await bcrypt.compare(password, member.password);
+        if (!isPasswordValid) {
             throw new UnauthorizedException('Mot de passe invalide.');
         }
 
