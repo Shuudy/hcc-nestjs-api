@@ -1,13 +1,17 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { MatchEntity } from './match.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { MemberEntity } from '../member/member.entity';
 
 @Injectable()
 export class MatchService {
     constructor(
         @InjectRepository(MatchEntity)
-        private matchRepository: Repository<MatchEntity>
+        private matchRepository: Repository<MatchEntity>,
+
+        @InjectRepository(MemberEntity)
+        private memberRepository: Repository<MemberEntity>
     ) {}
 
     async getAllMatches(): Promise<MatchEntity[]> {
@@ -43,5 +47,26 @@ export class MatchService {
         }
         
         return match;
+    }
+
+    async registerMemberToMatch(matchId: number, memberId: number): Promise<{ matchId: number, memberId: number }> {
+        const match = await this.matchRepository.findOne({ where: { id: matchId }, relations: ['members'] });
+        if (!match) {
+            throw new NotFoundException('Match non trouvé');
+        }
+
+        const member = await this.memberRepository.findOne({ where: { id: memberId } });
+        if (!member) {
+            throw new NotFoundException();
+        }
+
+        if (match.members.some((m) => m.id === member.id)) {
+            throw new BadRequestException('Vous êtes déjà inscrit à ce match');
+        }
+
+        match.members.push(member);
+        await this.matchRepository.save(match);
+
+        return { matchId: match.id, memberId: member.id };
     }
 }
