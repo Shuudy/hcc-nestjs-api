@@ -1,11 +1,16 @@
-import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
+import { CanActivate, ExecutionContext, ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
+import { ROLES_KEY } from '../roles/roles.decorator';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
 
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(
+    private readonly jwtService: JwtService,
+    private readonly reflector: Reflector,
+  ) { }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
 
@@ -19,10 +24,20 @@ export class AuthGuard implements CanActivate {
       const payload = await this.jwtService.verifyAsync(token, {
         secret: 'secret'
       });
+
       request['member'] = payload;
-    } catch {
+    } catch {      
       throw new UnauthorizedException();
     }
+
+    const requiredRoles = this.reflector.getAllAndOverride<string[]>(ROLES_KEY, [
+      context.getHandler(),
+      context.getClass()
+    ]);
+    if (requiredRoles && !requiredRoles.includes(request['member'].role)) {
+      throw new ForbiddenException();
+    }
+
     return true;
   }
 
