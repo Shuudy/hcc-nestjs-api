@@ -32,4 +32,19 @@ export class MatchController {
             }
         };
     }
+
+    @UseGuards(AuthGuard)
+    @Post(':id/unregister')
+    async unregisterToMatch(@Param('id', ParseIntPipe) id: number, @Request() req: Request) {
+        const { matchId: unregisteredMatchId, memberId: unregisteredMemberId } = await this.matchService.unregisterMemberToMatch(id, req['member'].id);
+
+        return {
+            status: 'success',
+            message: `Désinscription réussie du match n°${unregisteredMatchId}`,
+            data: {
+                matchId: unregisteredMatchId,
+                memberId: unregisteredMemberId
+            }
+        };
+    }
 }
