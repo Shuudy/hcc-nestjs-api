@@ -9,7 +9,8 @@ import { MemberEntity } from '../member/member.entity';
   imports: [
     JwtModule.register({
       global: true,
-      secret: 'secret'
+      secret: 'secret',
+      signOptions: { expiresIn: '3600s' }
     }),
     TypeOrmModule.forFeature([MemberEntity])
   ],
