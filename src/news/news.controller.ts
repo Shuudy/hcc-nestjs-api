@@ -1,7 +1,8 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Post, Request, UseGuards } from '@nestjs/common';
 import { NewsService } from './news.service';
 import { NewsEntity } from './news.entity';
 import { NewsDto } from './news.dto';
+import { AuthGuard } from '../auth/auth.guard';
 
 @Controller('news')
 export class NewsController {
@@ -18,8 +19,9 @@ export class NewsController {
         return await this.newsService.getOneNews(id);
     }
 
+    @UseGuards(AuthGuard)
     @Post('publish')
-    async publishNews(@Body() newsDto: NewsDto): Promise<NewsEntity> {
-        return await this.newsService.publishNews(newsDto);
+    async publishNews(@Body() newsDto: NewsDto, @Request() req: Request): Promise<NewsEntity> {
+        return await this.newsService.publishNews(newsDto, req['member'].id);
     }
 }

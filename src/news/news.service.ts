@@ -3,12 +3,16 @@ import { NewsEntity } from './news.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { NewsDto } from './news.dto';
+import { MemberEntity } from '../member/member.entity';
 
 @Injectable()
 export class NewsService {
     constructor(
         @InjectRepository(NewsEntity)
-        private newsRepository: Repository<NewsEntity>
+        private newsRepository: Repository<NewsEntity>,
+
+        @InjectRepository(MemberEntity)
+        private memberRepository: Repository<MemberEntity>
     ) {}
 
     async getAllNews(): Promise<NewsEntity[]> {
@@ -46,13 +50,20 @@ export class NewsService {
         return news;
     }
 
-    async publishNews(newsDto: NewsDto): Promise<NewsEntity> {
+    async publishNews(newsDto: NewsDto, memberId: number): Promise<NewsEntity> {
 
         if (!newsDto.name || !newsDto.content) {
             throw new BadRequestException();
         }
 
+        const member = await this.memberRepository.findOne({ where: { id: memberId } })
+        if (!member) {
+            throw new BadRequestException();
+        }
+
         const newNewsEntity = this.newsRepository.create(newsDto);
+        newNewsEntity.member = member;
+        
         return await this.newsRepository.save(newNewsEntity);
     }
 }
