@@ -1,7 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { NewsEntity } from './news.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { NewsDto } from './news.dto';
 
 @Injectable()
 export class NewsService {
@@ -43,5 +44,15 @@ export class NewsService {
         }
         
         return news;
+    }
+
+    async publishNews(newsDto: NewsDto): Promise<NewsEntity> {
+
+        if (!newsDto.name || !newsDto.content) {
+            throw new BadRequestException();
+        }
+
+        const newNewsEntity = this.newsRepository.create(newsDto);
+        return await this.newsRepository.save(newNewsEntity);
     }
 }
