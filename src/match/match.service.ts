@@ -3,6 +3,7 @@ import { MatchEntity } from './match.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MemberEntity } from '../member/member.entity';
+import { MatchDto } from './match.dto';
 
 @Injectable()
 export class MatchService {
@@ -89,5 +90,27 @@ export class MatchService {
         await this.matchRepository.save(match);
 
         return { matchId: match.id, memberId: member.id };
+    }
+
+    async addMatch(matchDto: MatchDto): Promise<MatchEntity> {
+
+        const matchDate = new Date(matchDto.match_date);
+        if (isNaN(matchDate.getTime())) {
+            throw new BadRequestException('Date invalide');
+        }
+
+        const matchDay = matchDate.toISOString().split('T')[0];
+
+        const existingMatch = await this.matchRepository
+        .createQueryBuilder('match')
+        .where('DATE(match.match_date) = :matchDay', { matchDay })
+        .getOne();
+
+        if (existingMatch) {
+            throw new BadRequestException('Un match existe déjà pour cette date');
+        }
+
+        const newMatchEntity = this.matchRepository.create({ match_date: matchDate });
+        return await this.matchRepository.save(newMatchEntity);
     }
 }

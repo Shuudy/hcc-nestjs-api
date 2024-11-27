@@ -1,7 +1,8 @@
-import { Controller, Get, Param, ParseIntPipe, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Post, Request, UseGuards } from '@nestjs/common';
 import { MatchService } from './match.service';
 import { MatchEntity } from './match.entity';
 import { AuthGuard } from '../auth/auth.guard';
+import { MatchDto } from './match.dto';
 
 @Controller('matches')
 export class MatchController {
@@ -46,5 +47,10 @@ export class MatchController {
                 memberId: unregisteredMemberId
             }
         };
+    }
+
+    @Post('add')
+    async addMatch(@Body() matchDto: MatchDto): Promise<MatchEntity> {
+        return await this.matchService.addMatch(matchDto);
     }
 }
