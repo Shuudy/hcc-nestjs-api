@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MemberEntity } from '../member/member.entity';
 import { MatchDto } from './match.dto';
-import { EditMatchDto } from './edit-match.dto';
+import { UpdateMatchDto } from './update-match.dto';
 
 @Injectable()
 export class MatchService {
@@ -100,9 +100,9 @@ export class MatchService {
         return await this.matchRepository.save(newMatchEntity);
     }
 
-    async editMatch(id: number, matchDto: EditMatchDto): Promise<MatchEntity> {        
+    async updateMatch(id: number, matchDto: UpdateMatchDto): Promise<MatchEntity> {        
         const match = await this.matchRepository.findOne({ where: { id } });
-        if (!match) {            
+        if (!match) {
             throw new NotFoundException();
         }
 

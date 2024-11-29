@@ -3,7 +3,7 @@ import { MatchService } from './match.service';
 import { MatchEntity } from './match.entity';
 import { AuthGuard } from '../auth/auth.guard';
 import { MatchDto } from './match.dto';
-import { EditMatchDto } from './edit-match.dto';
+import { UpdateMatchDto } from './update-match.dto';
 
 @Controller('matches')
 export class MatchController {
@@ -55,8 +55,8 @@ export class MatchController {
         return await this.matchService.addMatch(matchDto);
     }
 
-    @Patch(':id/edit')
-    async editMatch(@Param('id', ParseIntPipe) id: number, @Body() matchDto: EditMatchDto): Promise<MatchEntity> {
-        return await this.matchService.editMatch(id, matchDto);
+    @Patch(':id')
+    async updateMatch(@Param('id', ParseIntPipe) id: number, @Body() matchDto: UpdateMatchDto): Promise<MatchEntity> {
+        return await this.matchService.updateMatch(id, matchDto);
     }
 }
