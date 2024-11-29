@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MemberEntity } from '../member/member.entity';
 import { MatchDto } from './match.dto';
+import { EditMatchDto } from './edit-match.dto';
 
 @Injectable()
 export class MatchService {
@@ -93,8 +94,40 @@ export class MatchService {
     }
 
     async addMatch(matchDto: MatchDto): Promise<MatchEntity> {
+        const matchDate = await this.validateAndCheckDate(matchDto.match_date);
 
-        const matchDate = new Date(matchDto.match_date);
+        const newMatchEntity = this.matchRepository.create({ match_date: matchDate });
+        return await this.matchRepository.save(newMatchEntity);
+    }
+
+    async editMatch(id: number, matchDto: EditMatchDto): Promise<MatchEntity> {        
+        const match = await this.matchRepository.findOne({ where: { id } });
+        if (!match) {            
+            throw new NotFoundException();
+        }
+
+        if (!matchDto.match_date && !matchDto.team1_score && !matchDto.team2_score) {
+            throw new BadRequestException('Aucune donnée à modifier');
+        }
+
+        if (matchDto.match_date) {
+            const matchDate = await this.validateAndCheckDate(matchDto.match_date);
+            match.match_date = matchDate;
+        }
+
+        if (typeof matchDto.team1_score === 'number') { 
+            match.team1_score = matchDto.team1_score;
+        }
+    
+        if (typeof matchDto.team2_score === 'number') {
+            match.team2_score = matchDto.team2_score;
+        }
+
+        return await this.matchRepository.save(match);
+    }
+
+    private async validateAndCheckDate(date: Date): Promise<Date> {
+        const matchDate = new Date(date);
         if (isNaN(matchDate.getTime())) {
             throw new BadRequestException('Date invalide');
         }
@@ -110,7 +143,6 @@ export class MatchService {
             throw new BadRequestException('Un match existe déjà pour cette date');
         }
 
-        const newMatchEntity = this.matchRepository.create({ match_date: matchDate });
-        return await this.matchRepository.save(newMatchEntity);
+        return matchDate;
     }
 }

@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, Request, UseGuards } from '@nestjs/common';
 import { MatchService } from './match.service';
 import { MatchEntity } from './match.entity';
 import { AuthGuard } from '../auth/auth.guard';
 import { MatchDto } from './match.dto';
+import { EditMatchDto } from './edit-match.dto';
 
 @Controller('matches')
 export class MatchController {
@@ -52,5 +53,10 @@ export class MatchController {
     @Post('add')
     async addMatch(@Body() matchDto: MatchDto): Promise<MatchEntity> {
         return await this.matchService.addMatch(matchDto);
+    }
+
+    @Patch(':id/edit')
+    async editMatch(@Param('id', ParseIntPipe) id: number, @Body() matchDto: EditMatchDto): Promise<MatchEntity> {
+        return await this.matchService.editMatch(id, matchDto);
     }
 }
