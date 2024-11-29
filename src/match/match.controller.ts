@@ -4,6 +4,8 @@ import { MatchEntity } from './match.entity';
 import { AuthGuard } from '../auth/auth.guard';
 import { MatchDto } from './match.dto';
 import { UpdateMatchDto } from './update-match.dto';
+import { Roles } from '../roles/roles.decorator';
+import { RoleEnum } from '../roles/role.enum';
 
 @Controller('matches')
 export class MatchController {
@@ -21,6 +23,7 @@ export class MatchController {
     }
 
     @UseGuards(AuthGuard)
+    @Roles(RoleEnum.PLAYER)
     @Post(':id/registration')
     async registerToMatch(@Param('id', ParseIntPipe) id: number, @Request() req: Request) {
         const { matchId: registeredMatchId, memberId: registeredMemberId } = await this.matchService.registerMemberToMatch(id, req['member'].id);
@@ -36,6 +39,7 @@ export class MatchController {
     }
 
     @UseGuards(AuthGuard)
+    @Roles(RoleEnum.PLAYER)
     @Post(':id/registration/cancel')
     async unregisterToMatch(@Param('id', ParseIntPipe) id: number, @Request() req: Request) {
         const { matchId: unregisteredMatchId, memberId: unregisteredMemberId } = await this.matchService.unregisterMemberToMatch(id, req['member'].id);
@@ -50,11 +54,15 @@ export class MatchController {
         };
     }
 
+    @UseGuards(AuthGuard)
+    @Roles(RoleEnum.COACH)
     @Post()
     async addMatch(@Body() matchDto: MatchDto): Promise<MatchEntity> {
         return await this.matchService.addMatch(matchDto);
     }
 
+    @UseGuards(AuthGuard)
+    @Roles(RoleEnum.COACH)
     @Patch(':id')
     async updateMatch(@Param('id', ParseIntPipe) id: number, @Body() matchDto: UpdateMatchDto): Promise<MatchEntity> {
         return await this.matchService.updateMatch(id, matchDto);

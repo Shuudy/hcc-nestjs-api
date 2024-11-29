@@ -3,6 +3,8 @@ import { NewsService } from './news.service';
 import { NewsEntity } from './news.entity';
 import { NewsDto } from './news.dto';
 import { AuthGuard } from '../auth/auth.guard';
+import { RoleEnum } from '../roles/role.enum';
+import { Roles } from '../roles/roles.decorator';
 
 @Controller('news')
 export class NewsController {
@@ -20,6 +22,7 @@ export class NewsController {
     }
 
     @UseGuards(AuthGuard)
+    @Roles(RoleEnum.CONTRIBUTOR)
     @Post()
     async publishNews(@Body() newsDto: NewsDto, @Request() req: Request): Promise<NewsEntity> {
         return await this.newsService.publishNews(newsDto, req['member'].id);
