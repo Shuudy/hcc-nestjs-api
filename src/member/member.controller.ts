@@ -9,13 +9,13 @@ export class MemberController {
     constructor(private readonly memberService: MemberService) {}
 
     @Get()
-    async getMembers(): Promise<MemberEntity[]> {
-        return await this.memberService.getMembers();
+    async getAllMembers(): Promise<MemberEntity[]> {
+        return await this.memberService.getAllMembers();
     }
 
     @Get(':id')
-    async getMember(@Param('id', ParseIntPipe) id: number): Promise<MemberEntity> {
-        return await this.memberService.getMember(id);
+    async getOneMember(@Param('id', ParseIntPipe) id: number): Promise<MemberEntity> {
+        return await this.memberService.getOneMember(id);
     }
     
     @Post('add')

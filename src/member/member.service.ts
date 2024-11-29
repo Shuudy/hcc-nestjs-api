@@ -12,7 +12,7 @@ export class MemberService {
         private memberRepository: Repository<MemberEntity>
     ) {}
 
-    async getMembers(): Promise<MemberEntity[]> {
+    async getAllMembers(): Promise<MemberEntity[]> {
         return await this.memberRepository
         .createQueryBuilder('member')
         .leftJoinAndSelect('member.matches', 'match')
@@ -29,7 +29,7 @@ export class MemberService {
         .getMany();
     }
 
-    async getMember(id: number): Promise<MemberEntity> {
+    async getOneMember(id: number): Promise<MemberEntity> {
         const member = await this.memberRepository
         .createQueryBuilder('member')
         .leftJoinAndSelect('member.matches', 'match')
