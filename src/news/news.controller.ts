@@ -20,7 +20,7 @@ export class NewsController {
     }
 
     @UseGuards(AuthGuard)
-    @Post('publish')
+    @Post()
     async publishNews(@Body() newsDto: NewsDto, @Request() req: Request): Promise<NewsEntity> {
         return await this.newsService.publishNews(newsDto, req['member'].id);
     }

@@ -18,7 +18,7 @@ export class MemberController {
         return await this.memberService.getOneMember(id);
     }
     
-    @Post('add')
+    @Post()
     async addMember(@Body() memberDto: MemberDto): Promise<MemberEntity> {
         return await this.memberService.addMember(memberDto);
     }
