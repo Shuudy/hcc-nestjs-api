@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Request, UseGuards } from '@nestjs/common';
 import { MatchService } from './match.service';
 import { MatchEntity } from './match.entity';
 import { AuthGuard } from '../auth/auth.guard';
@@ -40,7 +40,7 @@ export class MatchController {
 
     @UseGuards(AuthGuard)
     @Roles(RoleEnum.PLAYER)
-    @Post(':id/registration/cancel')
+    @Delete(':id/registration')
     async unregisterToMatch(@Param('id', ParseIntPipe) id: number, @Request() req: Request) {
         const { matchId: unregisteredMatchId, memberId: unregisteredMemberId } = await this.matchService.unregisterMemberToMatch(id, req['member'].id);
 
