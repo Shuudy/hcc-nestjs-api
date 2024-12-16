@@ -28,14 +28,7 @@ export class MatchController {
     async registerToMatch(@Param('id', ParseIntPipe) id: number, @Request() req: Request) {
         const { matchId: registeredMatchId, memberId: registeredMemberId } = await this.matchService.registerMemberToMatch(id, req['member'].id);
 
-        return {
-            status: 'success',
-            message: `Inscription réussie au match n°${registeredMatchId}`,
-            data: {
-                matchId: registeredMatchId,
-                memberId: registeredMemberId
-            }
-        };
+        return this.createResponse(`Inscription réussie au match n°${registeredMatchId}`, { matchId: registeredMatchId, memberId: registeredMemberId });
     }
 
     @UseGuards(AuthGuard)
@@ -44,14 +37,7 @@ export class MatchController {
     async unregisterToMatch(@Param('id', ParseIntPipe) id: number, @Request() req: Request) {
         const { matchId: unregisteredMatchId, memberId: unregisteredMemberId } = await this.matchService.unregisterMemberToMatch(id, req['member'].id);
 
-        return {
-            status: 'success',
-            message: `Désinscription réussie du match n°${unregisteredMatchId}`,
-            data: {
-                matchId: unregisteredMatchId,
-                memberId: unregisteredMemberId
-            }
-        };
+        return this.createResponse(`Désinscription réussie du match n°${unregisteredMatchId}`, { matchId: unregisteredMatchId, memberId: unregisteredMemberId });
     }
 
     @UseGuards(AuthGuard)
@@ -66,5 +52,14 @@ export class MatchController {
     @Patch(':id')
     async updateMatch(@Param('id', ParseIntPipe) id: number, @Body() matchDto: UpdateMatchDto): Promise<MatchEntity> {
         return await this.matchService.updateMatch(id, matchDto);
+    }
+
+    private createResponse(message: string, data: Record<string, any>)
+    : { status: string, message: string, data: Record<string, any> } {
+        return {
+            status: 'success',
+            message,
+            data
+        };
     }
 }
