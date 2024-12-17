@@ -2,8 +2,8 @@ import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Reques
 import { MatchService } from './match.service';
 import { MatchEntity } from './match.entity';
 import { AuthGuard } from '../auth/auth.guard';
-import { MatchDto } from './match.dto';
-import { UpdateMatchDto } from './update-match.dto';
+import { MatchDto } from './dto/match.dto';
+import { UpdateMatchDto } from './dto/update-match.dto';
 import { Roles } from '../roles/roles.decorator';
 import { RoleEnum } from '../roles/role.enum';
 

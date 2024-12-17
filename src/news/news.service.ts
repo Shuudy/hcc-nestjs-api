@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { NewsEntity } from './news.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { NewsDto } from './news.dto';
+import { NewsDto } from './dto/news.dto';
 import { MemberEntity } from '../member/member.entity';
 
 @Injectable()

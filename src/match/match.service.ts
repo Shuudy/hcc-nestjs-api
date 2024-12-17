@@ -3,8 +3,8 @@ import { MatchEntity } from './match.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MemberEntity } from '../member/member.entity';
-import { MatchDto } from './match.dto';
-import { UpdateMatchDto } from './update-match.dto';
+import { MatchDto } from './dto/match.dto';
+import { UpdateMatchDto } from './dto/update-match.dto';
 
 @Injectable()
 export class MatchService {
