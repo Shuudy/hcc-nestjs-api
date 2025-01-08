@@ -1,14 +1,16 @@
-import { Body, Controller, Get, Param, Post, ParseIntPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, ParseIntPipe, UseGuards } from '@nestjs/common';
 import { MemberService } from './member.service';
 import { MemberDto } from './dto/member.dto';
 import { MemberEntity } from './member.entity';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { AuthGuard } from '../auth/auth.guard';
 
 @Controller('members')
 export class MemberController {
 
     constructor(private readonly memberService: MemberService) {}
 
+    @UseGuards(AuthGuard)
     @Get()
     @ApiOperation({ summary: 'Get all members' })
     @ApiResponse({ status: 200, description: 'List of all members.', type: [MemberEntity] })
@@ -16,6 +18,7 @@ export class MemberController {
         return await this.memberService.getAllMembers();
     }
 
+    @UseGuards(AuthGuard)
     @Get(':id')
     @ApiOperation({ summary: 'Get specific member by id' })
     @ApiResponse({ status: 200, description: 'The member data.', type: MemberEntity })

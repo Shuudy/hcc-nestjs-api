@@ -14,6 +14,7 @@ export class MatchController {
 
     constructor(private readonly matchService: MatchService) {}
 
+    @UseGuards(AuthGuard)
     @Get()
     @ApiOperation({ summary: 'Get all matches' })
     @ApiResponse({ status: 200, description: 'List of all matches.', type: [MatchEntity] })
@@ -21,6 +22,7 @@ export class MatchController {
         return await this.matchService.getAllMatches();
     }
 
+    @UseGuards(AuthGuard)
     @Get(':id')
     @ApiOperation({ summary: 'Get specific match' })
     @ApiResponse({ status: 200, description: 'The match data.', type: MatchEntity })

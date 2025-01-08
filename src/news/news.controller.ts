@@ -13,6 +13,7 @@ export class NewsController {
 
     constructor(private readonly newsService: NewsService) {}
 
+    @UseGuards(AuthGuard)
     @Get()
     @ApiOperation({ summary: 'Get all news' })
     @ApiResponse({ status: 200, description: 'List of all news.', type: [NewsEntity] })
@@ -20,6 +21,7 @@ export class NewsController {
         return await this.newsService.getAllNews();
     }
 
+    @UseGuards(AuthGuard)
     @Get(':id')
     @ApiOperation({ summary: 'Get specific news' })
     @ApiResponse({ status: 200, description: 'The news data.', type: NewsEntity })
