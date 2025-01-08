@@ -6,8 +6,9 @@ import { MatchDto } from './dto/match.dto';
 import { UpdateMatchDto } from './dto/update-match.dto';
 import { Roles } from '../roles/roles.decorator';
 import { RoleEnum } from '../roles/role.enum';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
+@ApiBearerAuth()
 @Controller('matches')
 export class MatchController {
 

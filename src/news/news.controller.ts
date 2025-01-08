@@ -5,8 +5,9 @@ import { NewsDto } from './dto/news.dto';
 import { AuthGuard } from '../auth/auth.guard';
 import { RoleEnum } from '../roles/role.enum';
 import { Roles } from '../roles/roles.decorator';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
+@ApiBearerAuth()
 @Controller('news')
 export class NewsController {
 
