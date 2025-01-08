@@ -6,6 +6,7 @@ import { MatchDto } from './dto/match.dto';
 import { UpdateMatchDto } from './dto/update-match.dto';
 import { Roles } from '../roles/roles.decorator';
 import { RoleEnum } from '../roles/role.enum';
+import { ApiOperation } from '@nestjs/swagger';
 
 @Controller('matches')
 export class MatchController {
@@ -13,11 +14,13 @@ export class MatchController {
     constructor(private readonly matchService: MatchService) {}
 
     @Get()
+    @ApiOperation({ summary: 'Get all matches' })
     async getAllMatches(): Promise<MatchEntity[]> {
         return await this.matchService.getAllMatches();
     }
 
     @Get(':id')
+    @ApiOperation({ summary: 'Get specific match' })
     async getOneMatch(@Param('id', ParseIntPipe) id: number): Promise<MatchEntity> {
         return await this.matchService.getOneMatch(id);
     }
@@ -25,6 +28,7 @@ export class MatchController {
     @UseGuards(AuthGuard)
     @Roles(RoleEnum.PLAYER)
     @Post(':id/registration')
+    @ApiOperation({ summary: 'Register to specific match' })
     async registerToMatch(@Param('id', ParseIntPipe) id: number, @Request() req: Request) {
         const { matchId: registeredMatchId, memberId: registeredMemberId } = await this.matchService.registerMemberToMatch(id, req['member'].id);
 
@@ -34,6 +38,7 @@ export class MatchController {
     @UseGuards(AuthGuard)
     @Roles(RoleEnum.PLAYER)
     @Delete(':id/registration')
+    @ApiOperation({ summary: 'Unregister to specific match' })
     async unregisterToMatch(@Param('id', ParseIntPipe) id: number, @Request() req: Request) {
         const { matchId: unregisteredMatchId, memberId: unregisteredMemberId } = await this.matchService.unregisterMemberToMatch(id, req['member'].id);
 
@@ -43,6 +48,7 @@ export class MatchController {
     @UseGuards(AuthGuard)
     @Roles(RoleEnum.COACH)
     @Post()
+    @ApiOperation({ summary: 'Add match' })
     async addMatch(@Body() matchDto: MatchDto): Promise<MatchEntity> {
         return await this.matchService.addMatch(matchDto);
     }
@@ -50,6 +56,7 @@ export class MatchController {
     @UseGuards(AuthGuard)
     @Roles(RoleEnum.COACH)
     @Patch(':id')
+    @ApiOperation({ summary: 'Update specific match' })
     async updateMatch(@Param('id', ParseIntPipe) id: number, @Body() matchDto: UpdateMatchDto): Promise<MatchEntity> {
         return await this.matchService.updateMatch(id, matchDto);
     }
