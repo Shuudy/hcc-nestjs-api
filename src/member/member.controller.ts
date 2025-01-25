@@ -1,9 +1,11 @@
-import { Body, Controller, Get, Param, Post, ParseIntPipe, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, ParseIntPipe, UseGuards, Patch } from '@nestjs/common';
 import { MemberService } from './member.service';
 import { MemberDto } from './dto/member.dto';
 import { MemberEntity } from './member.entity';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AuthGuard } from '../auth/auth.guard';
+import { RoleEnum } from '../roles/role.enum';
+import { Roles } from '../roles/roles.decorator';
 
 @Controller('members')
 export class MemberController {
@@ -33,5 +35,16 @@ export class MemberController {
     @ApiResponse({ status: 400, description: 'Invalid member data.' })
     async addMember(@Body() memberDto: MemberDto): Promise<MemberEntity> {
         return await this.memberService.addMember(memberDto);
+    }
+
+    @UseGuards(AuthGuard)
+    @Roles(RoleEnum.ADMIN)
+    @Patch(':id/role')
+    @ApiOperation({ summary: 'Update member role' })
+    @ApiResponse({ status: 200, description: 'Member role updated.', type: MemberEntity })
+    @ApiResponse({ status: 400, description: 'Invalid role data.' })
+    @ApiResponse({ status: 404, description: 'Member not found.' })
+    async updateMemberRole(@Param('id', ParseIntPipe) id: number, @Body('role') role: RoleEnum): Promise<MemberEntity> {
+        return await this.memberService.updateMemberRole(id, role);
     }
 }

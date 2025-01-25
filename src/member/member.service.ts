@@ -4,6 +4,7 @@ import { MemberEntity } from './member.entity';
 import { Repository } from 'typeorm';
 import { MemberDto } from './dto/member.dto';
 import * as bcrypt from 'bcrypt';
+import { RoleEnum } from '../roles/role.enum';
 
 @Injectable()
 export class MemberService {
@@ -66,7 +67,22 @@ export class MemberService {
 
         const hashedPasword = await bcrypt.hash(memberDto.password, 11);
 
-        const newMemberEntity = this.memberRepository.create({ ...memberDto, password: hashedPasword, role: 'contributor' });
+        const newMemberEntity = this.memberRepository.create({ ...memberDto, password: hashedPasword, role: 'pending' });
         return await this.memberRepository.save(newMemberEntity);
+    }
+
+    async updateMemberRole(id: number, role: RoleEnum): Promise<MemberEntity> {
+        const member = await this.memberRepository.findOneBy({ id });
+
+        if (!member) {
+            throw new NotFoundException(`Membre avec l'ID ${id} non trouvé`);
+        }
+
+        if (!Object.values(RoleEnum).includes(role)) {
+            throw new BadRequestException(`Rôle invalide: ${role}`);
+        }
+
+        member.role = role;
+        return await this.memberRepository.save(member);
     }
 }
