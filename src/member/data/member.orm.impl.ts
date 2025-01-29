@@ -10,7 +10,16 @@ export class MemberOrmRepository implements MemberRepository {
         private readonly repository: Repository<MemberEntity>
     ) { }
     
-    getAll(): Promise<Member[]> {
-        return this.repository.find();
+    async getAll(): Promise<Member[]> {
+        const members = await this.repository.find();
+        return members.map((member) => {
+            return {
+                id: member.id,
+                firstname: member.firstname,
+                lastname: member.lastname,
+                email: member.email,
+                password: member.password,
+            };
+        });
     }
 }
