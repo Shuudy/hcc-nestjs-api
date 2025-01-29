@@ -1,21 +1,25 @@
 import { Body, Controller, Get, Param, Post, ParseIntPipe, UseGuards } from '@nestjs/common';
-import { MemberService } from './member.service';
-import { MemberDto } from './dto/member.dto';
-import { MemberEntity } from './member.entity';
+import { MemberService } from '../member.service';
+import { MemberDto } from './dtos/member.dto';
+import { MemberEntity } from '../member.entity';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { AuthGuard } from '../auth/auth.guard';
+import { AuthGuard } from '../../auth/auth.guard';
+import { MemberGetAllUseCase } from '../domain/usecases/member.get-all.usecase';
+import { Member } from '../domain/models/member';
 
 @Controller('members')
 export class MemberController {
 
-    constructor(private readonly memberService: MemberService) {}
+    constructor(private readonly memberService: MemberService,
+        private readonly memberGetAllUseCase: MemberGetAllUseCase
+    ) { }
 
     @UseGuards(AuthGuard)
     @Get()
     @ApiOperation({ summary: 'Get all members' })
     @ApiResponse({ status: 200, description: 'List of all members.', type: [MemberEntity] })
-    async getAllMembers(): Promise<MemberEntity[]> {
-        return await this.memberService.getAllMembers();
+    async getAllMembers(): Promise<Member[]> {
+        return await this.memberGetAllUseCase.execute();
     }
 
     @UseGuards(AuthGuard)
@@ -26,7 +30,7 @@ export class MemberController {
     async getOneMember(@Param('id', ParseIntPipe) id: number): Promise<MemberEntity> {
         return await this.memberService.getOneMember(id);
     }
-    
+
     @Post()
     @ApiOperation({ summary: 'Add member' })
     @ApiResponse({ status: 201, description: 'Member successfully added.', type: MemberEntity })
