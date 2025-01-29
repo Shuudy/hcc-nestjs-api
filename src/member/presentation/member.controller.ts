@@ -17,7 +17,7 @@ export class MemberController {
     @UseGuards(AuthGuard)
     @Get()
     @ApiOperation({ summary: 'Get all members' })
-    @ApiResponse({ status: 200, description: 'List of all members.', type: [MemberEntity] })
+    @ApiResponse({ status: 200, description: 'List of all members.', type: [Member] })
     async getAllMembers(): Promise<Member[]> {
         return await this.memberGetAllUseCase.execute();
     }
