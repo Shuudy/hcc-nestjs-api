@@ -1,0 +1,2 @@
+INSERT INTO members(firstname, lastname, email, password, role, registration_date)
+VALUES('John', 'Doe', 'john@example.com', '$2b$11$KxCQiZasJM43kx4Zmhj9auA0kkPwdgth.9n/t6qCWQ7f.AoKEIj6G', 'admin', '2025-01-01');
