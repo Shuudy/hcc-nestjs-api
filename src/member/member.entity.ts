@@ -6,7 +6,9 @@ import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 't
 export enum MemberRole {
     COACH = 'coach',
     PLAYER = 'player',
-    CONTRIBUTOR = 'contributor'
+    CONTRIBUTOR = 'contributor',
+    PENDING = 'pending',
+    ADMIN = 'admin',
 }
 
 @Entity('members')
